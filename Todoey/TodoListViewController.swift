@@ -2,11 +2,12 @@ import UIKit
 
 class TodoListViewController: UITableViewController {
 
-    let itemArray = ["Find Mike" , "Buy Eggos" , "Destroy Demogorgon"]
+    var itemArray = ["Find Mike" , "Buy Eggos" , "Destroy Demogorgon"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
     }
 
     //MARK - Tableview Datasource Methods
@@ -44,6 +45,41 @@ class TodoListViewController: UITableViewController {
         //and after that the grey backround dissapears:
         tableView.deselectRow(at: indexPath, animated: true)
         
+        
+        
+    }
+    
+    
+    
+    // MARK - Add new Items
+    
+    
+    @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
+        
+        //the local variable we need to get access to the alertTextfield.text also outside of the
+        //alert.addTextField function.
+        var textField = UITextField()
+        
+        let alert = UIAlertController(title: "Add new todoey item", message: "hell yeah do it", preferredStyle: .alert)
+        
+        let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
+            //what will happen once the user clicks the Add Item button on out UIAlert:
+            print(textField.text!)
+            self.itemArray.append(textField.text!)
+            self.tableView.reloadData()
+            
+            
+        }
+        
+        alert.addTextField { (alertTextField) in
+            //placeholder is what's "written" in the textfield before you write something:
+            alertTextField.placeholder = "Create new item"
+            textField = alertTextField
+        }
+        
+        alert.addAction(action)
+        
+        present(alert, animated: true, completion: nil)
         
         
     }
