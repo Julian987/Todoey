@@ -1,10 +1,4 @@
-//
-//  AppDelegate.swift
-//  Todoey
-//
-//  Created by Julian Gurdan on 18.09.18.
-//  Copyright © 2018 Julian Gurdan. All rights reserved.
-//
+
 
 import UIKit
 
@@ -19,10 +13,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         print("didFinishLaunchingWithOptions")
         
-        print(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).last! as String)
-        
-        
-        
+                
         return true
     }
 

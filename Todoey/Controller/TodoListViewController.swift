@@ -1,3 +1,11 @@
+//At this version if the code, the Userdefaults save method doesent work anymore. Because it is not made
+//store large peaces of data. like instances of our items class. It's just for stuff like user settings.
+//Because UserDefaults can only take stadard data and no custom data.
+//The reason of this is: We store the data in a plist. A plist does only accept a view datatypes to store. These are all
+//standard datatypes and no Datatypes like an object of a class we created (== custom datatypes).
+//We use an encoder now. He simply takes our data changes it a little so that we can netherless store it in a plist.
+//also whatch 247 bookmark.
+
 import UIKit
 
 class TodoListViewController: UITableViewController {
@@ -6,31 +14,28 @@ class TodoListViewController: UITableViewController {
     //the title of the thing we wanna do AND if its checked or not.
     var itemArray = [Item]()
     
+    //this variable stores an refernce to an folder where we can store our data for this app:
+    //(that is "the let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first"part )
+    //in this folder we want to create a file with the name Itmes.plist (that is the rest):
+    //the urls retuns an array and in this arry we want the first component:
+    //with this line of code we merely create a path to the location where we want to safe our file. We did NOT creat a
+    //file jet.
+    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
+    
+    
     let defaults = UserDefaults.standard
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        print(dataFilePath)
+        
+        
         //we don't want to force unwrappe it in case that there is no Data in out Harddrive:
         //Xcode is clever enough to know that the thing we safed in the HD was an array.
         
-        if let items = defaults.array(forKey: "TodoListArray") as? [Item] {
-            itemArray = items
-        }
         
-        
-        let newItem = Item()
-        newItem.title  = "Finde Mike"
-        itemArray.append(newItem)
-        
-        let newItem2 = Item()
-        newItem2.title  = "Buy Eggos"
-        itemArray.append(newItem2)
-        
-        let newItem3 = Item()
-        newItem3.title  = "Destroy Demogorgon"
-        itemArray.append(newItem3)
-        
+        loadItems()
         
     }
 
@@ -81,9 +86,12 @@ class TodoListViewController: UITableViewController {
         //We swich true to false and false to true:
         itemArray[indexPath.row].done = !itemArray[indexPath.row].done
         
-       
+        //We don't need tableView.reloadData() because it's also within safeItems()
+        //we need to safe that we clicket on our Cell to make a check mark:
+        safeItems()
+        
         //forces the table view to call its data source methods again:
-        tableView.reloadData()
+            //tableView.reloadData()
         
         //if there is no check mark then insert one, if there is allready one then delete it:
         
@@ -113,22 +121,15 @@ class TodoListViewController: UITableViewController {
             //what will happen once the user clicks the Add Item button on out UIAlert:
             print(textField.text!)
             
-            
             let newItem = Item()
             newItem.title = textField.text!
             
-            
             self.itemArray.append(newItem)
             
-            
-            //We can find this array now under the key "TodoListArray"
-            self.defaults.set(self.itemArray, forKey: "TodoListArray")
-            
-            self.tableView.reloadData()
-            
+            self.safeItems()
             }
         
-        
+        //Creating an alert:
         alert.addTextField { (alertTextField) in
             //placeholder is what's "written" in the textfield before you write something:
             alertTextField.placeholder = "Create new item"
@@ -138,6 +139,47 @@ class TodoListViewController: UITableViewController {
         alert.addAction(action)
         
         present(alert, animated: true, completion: nil)
+        
+        
+    }
+    
+    
+    
+    
+    
+    
+    //MARK - Data Model Manipulatin Methods:
+    
+    func safeItems() {
+        
+        //an encoder (kodierer) is an Object that can Encode our Data so that we can store even
+        //custom data in a for exampele  .plist file.:
+        let encoder = PropertyListEncoder()
+        
+        do {
+            let data = try encoder.encode(itemArray)
+            try data.write(to: dataFilePath!)
+        }
+        catch {
+            print("Error encoding item array, \(error)")
+        }
+        
+        tableView.reloadData()
+    }
+    
+    
+    
+    func loadItems() {
+        //the try? turnes the code after it to an optinal. Now we use this known mehtod to safe unwrappe it:
+        if  let data  = try? Data(contentsOf: dataFilePath!) {
+            let decoder = PropertyListDecoder()
+            do{
+                try itemArray = decoder.decode([Item].self, from: data)
+            }
+            catch {
+                print("Error decoding item array, \(error)")
+            }
+        }
         
         
     }
