@@ -2,6 +2,7 @@
 
 import UIKit
 import CoreData
+import RealmSwift
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -11,10 +12,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     /*Gets called first. Immediatly after the app launched:*/
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        /* Override point for customization after application launch.*/
-        print("didFinishLaunchingWithOptions")
         
-                
+        
+        
+        /*Prints where we store our Data.*/
+        print(Realm.Configuration.defaultConfiguration.fileURL)
+        
+        let data = Data()
+        data.name = "Julian"
+        data.age = 20
+        
+        
+        do{
+            let realm = try Realm()
+            try realm.write {
+                    realm.add(data)
+            }
+        }
+        catch{
+            print("error initialising new realm \(error)")
+        }
+        
+        
         return true
     }
     
