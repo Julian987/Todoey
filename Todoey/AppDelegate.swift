@@ -1,6 +1,7 @@
 
 
 import UIKit
+import CoreData
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,35 +17,57 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 
         return true
     }
-
-    
-    //Gets triggered when something happens to the phone while the app is open, zB: user gets called:
-    func applicationWillResignActive(_ application: UIApplication) {
-        // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-        // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
-    }
-
-    //Gets triggerd when the app gets in the backroud (zB You've pressed the Home Button):
-    func applicationDidEnterBackground(_ application: UIApplication) {
-        // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
-        // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-        print("applicationDidEnterBackround")
-    }
-
-    func applicationWillEnterForeground(_ application: UIApplication) {
-        // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
-    }
-
-    func applicationDidBecomeActive(_ application: UIApplication) {
-        // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-    }
-
     
     //App is going to be terminated (can be user triggered or system triggered)
     func applicationWillTerminate(_ application: UIApplication) {
-        // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+
+        self.saveContext()
+    }
+    
+    // MARK: - Core Data stack
+    
+    //lazy == only gets loaded up with a vaule when its needed:
+    //The NSPersistentContainer is where we are going to store all of our Data:
+    //the default PersistentContainer is a SQL like Database:
+    lazy var persistentContainer: NSPersistentContainer = {
+
+        // now we create a constant called container that sets up this new persistent container with
+        // the name of our data model. (Data Model is DataModel.xcdatamodeld)
+        // these to names HAVE TO match
+        let container = NSPersistentContainer(name: "DataModel")
         
-        print("applicationWillTerminate")
+        //Here were going to load up this persistent Store:
+        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+            if let error = error as NSError? {
+
+                fatalError("Unresolved error \(error), \(error.userInfo)")
+            }
+        })
+        
+        
+        //if there weren't any errors we are going to return the container.
+        //then our persistentContainer contains this NSPersistentContainer Object.
+        return container
+    }()
+    
+    // MARK: - Core Data Saving support
+    
+    func saveContext () {
+        //essentially the context is an area where you can change and update your data so you can undo
+        //and redo until you're happy with your data.
+        //then you can save the data that's in your contacts (also called your temporary area) to the
+        //container which is for permanent storage.
+        //Simular to the staging area in github (diese zwischen area halt.)
+        let context = persistentContainer.viewContext
+        if context.hasChanges {
+            do {
+                try context.save()
+            } catch {
+
+                let nserror = error as NSError
+                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+            }
+        }
     }
 
 
