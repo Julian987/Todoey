@@ -44,10 +44,10 @@ class CategoryViewController: SwipeTableViewController {
             
             let newCategory = Category()
             newCategory.name = textField.text!
-            newCategory.color = UIColor.randomFlat.hexValue()
+//            newCategory.color = UIColor.randomFlat.hexValue()
 
             /*Own modification:*/
-//            newCategory.color = RandomFlatColorWithShade(.light).hexValue()
+            newCategory.color = RandomFlatColorWithShade(.light).hexValue()
             
             /*We dont need to append the "array" anymore because it's auto updating its slef*/
             
