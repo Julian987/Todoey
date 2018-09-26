@@ -28,7 +28,7 @@ class TodoListViewController: SwipeTableViewController {
         
         tableView.rowHeight = 80
         
-        tableView.separatorStyle = .none
+        tableView.separatorStyle = .singleLineEtched
         
         if let colourHex = selectedCategory?.color {
             navigationController?.navigationBar.barTintColor = UIColor(hexString: colourHex)
@@ -57,9 +57,11 @@ class TodoListViewController: SwipeTableViewController {
     }
     
     
-    /*Is called just before the View is going to be removed from the View Hierarchie / the navigation Stack:*/
+    /*Is called just before the View is going to be removed from the View Hierarchie / the navigation Stack: One important note. When we change the colour of the Navigation bar, we change the colour of every fucking Viewcontroller that is somehow connected to the
+     Navigation controller. So when we go back we have to make shure to color the Navbar back to the color that it has before:
+     */
     override func viewWillDisappear(_ animated: Bool) {
-        updateNavBar(wirhHexCode: "1D9BF6")
+        updateNavBar(wirhHexCode: "FFED74")
     }
     
     
@@ -75,7 +77,11 @@ class TodoListViewController: SwipeTableViewController {
         /*Making the collour of all navBar items be in contrast to the Backround like all the text:*/
         navBar.tintColor = ContrastColorOf(navBarColour, returnFlat: true)
         
-        navBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor : ContrastColorOf(navBarColour, returnFlat: true)]
+        if #available(iOS 11.0, *) {
+            navBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor : ContrastColorOf(navBarColour, returnFlat: true)]
+        } else {
+            navBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : ContrastColorOf(navBarColour, returnFlat: true)]
+        }
         
         searchBar.barTintColor = navBarColour
     }
@@ -186,13 +192,16 @@ class TodoListViewController: SwipeTableViewController {
                 }
             }
             
-            
             //MARK: - Debug:
             print("still works")
             
             
             
             self.tableView.reloadData()
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
+            /*We just want to cancel so we don't need to write any code*/
         }
         
         /*Creating an alert:*/
@@ -203,6 +212,8 @@ class TodoListViewController: SwipeTableViewController {
         }
         
         alert.addAction(action)
+        
+        alert.addAction(cancelAction)
         
         present(alert, animated: true, completion: nil)
         

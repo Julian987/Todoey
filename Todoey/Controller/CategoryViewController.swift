@@ -22,14 +22,39 @@ class CategoryViewController: SwipeTableViewController {
         
         tableView.rowHeight = 80
         
-        tableView.separatorStyle = .none
-
+        tableView.separatorStyle = .singleLineEtched
+        
+        guard let navBar = navigationController?.navigationBar else {fatalError("Navigation controller does not exist.")}
+        
+        navBar.barTintColor = UIColor(hexString: "FFED74")
+        
+//        updateNavBar(wirhHexCode: "FFED74")
     }
     
     
+
+    override func viewWillAppear(_ animated: Bool) {
+        updateNavBar(wirhHexCode: "FFED74")
+    }
     
     
-    
+    func updateNavBar(wirhHexCode colourHexCode: String){
+        guard let navBar = navigationController?.navigationBar else {fatalError("Navigation controller does not exist.")}
+
+        guard let navBarColour = UIColor(hexString: colourHexCode) else { fatalError() }
+
+        navBar.barTintColor = navBarColour
+
+        /*Making the collour of all navBar items be in contrast to the Backround like all the text:*/
+        navBar.tintColor = ContrastColorOf(navBarColour, returnFlat: true)
+
+        if #available(iOS 11.0, *) {
+            navBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor : ContrastColorOf(navBarColour, returnFlat: true)]
+        } else {
+            navBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : ContrastColorOf(navBarColour, returnFlat: true)]
+        }
+
+    }
     
     
     //MARK: - Add new Categories
@@ -54,12 +79,20 @@ class CategoryViewController: SwipeTableViewController {
             self.save(category: newCategory)
         }
         
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
+            
+        }
+        
         alert.addTextField { (alertTextField) in
             alertTextField.placeholder = "Create new category"
             textField = alertTextField
         }
         
+        alert.addAction(cancelAction)
+        
         alert.addAction(action)
+        
+        
         
         present(alert, animated: true, completion: nil)
     }
@@ -164,6 +197,11 @@ class CategoryViewController: SwipeTableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: "goToItems", sender: self)
+        
+       
+        //MARK: - Change:
+        
+        tableView.deselectRow(at: indexPath, animated: false)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
