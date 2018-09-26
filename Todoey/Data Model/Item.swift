@@ -5,7 +5,7 @@ import RealmSwift
 class Item : Object {
     @objc dynamic var title : String = ""
     @objc dynamic var done : Bool = false
-    @objc dynamic var dateCreated: Date? 
+    @objc dynamic var dateCreated: Date?
     
     /*It's simply defining the inverse Relationship of Items to Category.
      LinkingObjects(fromType: Object.Type, property: String) is the definition. It's not enough to write Category.
