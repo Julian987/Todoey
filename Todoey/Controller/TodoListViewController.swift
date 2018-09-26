@@ -32,7 +32,7 @@ class TodoListViewController: SwipeTableViewController {
         
         if let colourHex = selectedCategory?.color {
             navigationController?.navigationBar.barTintColor = UIColor(hexString: colourHex)
-            /*Own modification:*/
+            /*Own modification: */
 //            self.tableView.backgroundColor = UIColor(hexString: colourHex)
         }
         
