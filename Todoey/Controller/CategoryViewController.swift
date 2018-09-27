@@ -72,7 +72,8 @@ class CategoryViewController: SwipeTableViewController {
 //            newCategory.color = UIColor.randomFlat.hexValue()
 
             /*Own modification:*/
-            newCategory.color = RandomFlatColorWithShade(.light).hexValue()
+            newCategory.color = FlatGray().hexValue()
+                
             
             /*We dont need to append the "array" anymore because it's auto updating its slef*/
             
@@ -179,6 +180,11 @@ class CategoryViewController: SwipeTableViewController {
         
             do {
                 try self.realm.write {
+                    
+                let endIndex = categoryForDeletion.items.endIndex
+                    
+                    print("endIndex is: \(endIndex)")
+                    
                 self.realm.delete(categoryForDeletion)
                 }
             }
