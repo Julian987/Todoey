@@ -1,8 +1,10 @@
 import UIKit
 import RealmSwift
 import ChameleonFramework
+import SwipeCellKit
 
-class TodoListViewController: SwipeTableViewController {
+//MARK: - Change
+class TodoListViewController: /*SwipeTableViewController*/ UITableViewController {
     
     /*the only reason we didn't use an array of string is, we need to Store 2 pices of data.
       the title of the thing we wanna do AND if its checked or not.*/
@@ -28,13 +30,20 @@ class TodoListViewController: SwipeTableViewController {
         
         tableView.rowHeight = 80
         
-        tableView.separatorStyle = .singleLineEtched
+        tableView.separatorStyle = .none
         
         if let colourHex = selectedCategory?.color {
             navigationController?.navigationBar.barTintColor = UIColor(hexString: colourHex)
             /*Own modification: */
             self.tableView.backgroundColor = UIColor(hexString: colourHex)
         }
+        
+        //MARK: - Change:
+        tableView.register(UINib(nibName: "CustomTodoCell", bundle : nil), forCellReuseIdentifier: "TodoItemCell")
+        
+        
+        //MARK: - Change:
+        self.configureTableView()
         
     }
 
@@ -102,25 +111,57 @@ class TodoListViewController: SwipeTableViewController {
         print("In ToDoList.. before cellForRow")
         
         /*This would cause an Bug based on the check mark of the cells see Video 243 bookmark:*/
-        let cell = super.tableView(tableView, cellForRowAt: indexPath)
+        
+        //MARK: - Change:
+        /*let cell = super.tableView(tableView, cellForRowAt: indexPath)*/
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TodoItemCell", for: indexPath) as! CustomTodoCell
+        cell.delegate = self
+        
+        //MARK: - Change
+        cell.indexPath = indexPath
+        cell.tableView = tableView
+        cell.todoListViewContoller = self
         
         print("In ToDoList.. after cellForRow")
         
         if let item = todoItems?[indexPath.row] {
             
-            cell.textLabel?.text = item.title
+            //MARK Change:
+            /*cell.textLabel?.text = item.title*/
+            
+            cell.cellTextLabel.text = item.title
             
             /*CGFloat is short for CoreGraohicsFloat:*/
             if let colour = UIColor(hexString: selectedCategory!.color)?.darken(byPercentage: (  CGFloat(indexPath.row) / CGFloat(todoItems!.count) )  ){
 
-                cell.backgroundColor = colour
-                cell.textLabel?.textColor = ContrastColorOf(colour, returnFlat: true)
+                //MARK: - Change:
+                /*cell.backgroundColor = colour
+                cell.textLabel?.textColor = ContrastColorOf(colour, returnFlat: true)*/
+                
+                cell.cellBackround.backgroundColor = colour
+                cell.cellTextLabel.textColor = ContrastColorOf(colour, returnFlat: true)
             }
             
             /*we are going to set the accesoryType property based on the value of item.done.
              is item.done true then we set it to .checkmark else we set it .none:*/
-            cell.accessoryType = item.done ? .checkmark : .none
+            
+            //MARK: - Change:
+            /*cell.accessoryType = item.done ? .checkmark : .none*/
+            
+            /*Just setting the Checkbox to checked or unchecked and dealing with some optionals:*/
+            if let unchekedBoxImage = UIImage(named: "icons8-unchecked-checkbox-filled-50"){
+                if let checkedBoxImage = UIImage(named: "icons8-checked-checkbox-filled-50"){
+                    if item.done{
+                        cell.chekFieldButton.setImage(checkedBoxImage, for: .normal)
+                    }
+                    else {
+                        cell.chekFieldButton.setImage(unchekedBoxImage, for: .normal)
+                    }
+                }
+            }
         
+            
+            
         }
         
         
@@ -155,6 +196,7 @@ class TodoListViewController: SwipeTableViewController {
             }
         }
         
+        
         tableView.reloadData()
         
         tableView.deselectRow(at: indexPath, animated: true)
@@ -177,25 +219,35 @@ class TodoListViewController: SwipeTableViewController {
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             /*what will happen once the user clicks the Add Item button on out UIAlert:*/
             print(textField.text!)
-
+            
             if let currentCategory = self.selectedCategory{
-                do {
-                    try self.realm.write {
-                        let newItem = Item()
-                        newItem.title = textField.text!
-                        newItem.dateCreated = Date()
-                        currentCategory.items.append(newItem)
+                
+                if let textInTextfield = textField.text{
+
+                    if textInTextfield != ""{
+                        do {
+                            try self.realm.write {
+                                let newItem = Item()
+                                newItem.title = textField.text!
+                                newItem.dateCreated = Date()
+                                currentCategory.items.append(newItem)
+                            }
+                        }
+                        catch {
+                            print("Error saving new Item, \(error)")
+                        }
                     }
-                }
-                catch {
-                    print("Error saving new Item, \(error)")
+                    else {
+                        //Create an alert
+                        print("\n\ncreate an alert \n\n")
+                    }
                 }
             }
             
             //MARK: - Debug:
             print("still works")
             
-            
+            self.configureTableView()
             
             self.tableView.reloadData()
         }
@@ -222,6 +274,20 @@ class TodoListViewController: SwipeTableViewController {
     
     
     
+    func configureTableView() {
+        
+        //MARK: - I think the i can clean the if statement:
+        if let items = todoItems {
+            if items.isEmpty{
+                tableView.rowHeight = 80.0
+            }
+        }
+        tableView.rowHeight = UITableView.automaticDimension
+        print("automatic dimension : \(UITableView.automaticDimension)")
+        tableView.estimatedRowHeight = 80.0
+        print("utomatic dimension after estimatedRowheight \(UITableView.automaticDimension)")
+
+    }
     
     
     
@@ -243,9 +309,10 @@ class TodoListViewController: SwipeTableViewController {
     
     
     
-    //Mark: - Delete Data From Swipe:
+    //MARK: - Delete Data From Swipe:
     
-    override func updateModel(at indexPath: IndexPath) {
+    //MARK: - Change:
+    /*override*/ func updateModel(at indexPath: IndexPath) {
         if let itemForDeletion = self.todoItems?[indexPath.row]{
             
             do {
@@ -268,7 +335,9 @@ class TodoListViewController: SwipeTableViewController {
 
 extension TodoListViewController: UISearchBarDelegate {
 
-
+    /*Important to Know here: You write something in your searchbar. Then you click the searchBarSearchButton. After that this function
+     gets triggered. Then this function surches in your DATAMODEL so our List of Items. And the it displays the new Data in the Cells
+     of our TableView. It doesen't search for the content in your Cells that you display on screen it searches in the DATABASE:*/
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         print("search Button clicked")
         todoItems = todoItems?.filter("title CONTAINS [cd] %@", searchBar.text!).sorted(byKeyPath: "dateCreated", ascending: true)
@@ -299,3 +368,25 @@ extension TodoListViewController: UISearchBarDelegate {
 
 
 }
+
+
+
+
+//MARK:- Change
+extension TodoListViewController: SwipeTableViewCellDelegate {
+    
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
+        guard orientation == .right else { return nil }
+        
+        let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
+            // handle action by updating model with deletion
+            self.updateModel(at: indexPath)
+        }
+        
+        // customize the action appearance
+        deleteAction.image = UIImage(named: "delete")
+        
+        return [deleteAction]
+    }
+}
+
