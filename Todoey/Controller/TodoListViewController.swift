@@ -2,6 +2,7 @@ import UIKit
 import RealmSwift
 import ChameleonFramework
 import SwipeCellKit
+import AlertTransition
 
 //MARK: - Change
 class TodoListViewController: /*SwipeTableViewController*/ UITableViewController {
@@ -214,9 +215,9 @@ class TodoListViewController: /*SwipeTableViewController*/ UITableViewController
            alert.addTextField function.*/
         var textField = UITextField()
         
-        let alert = UIAlertController(title: "Add new todoey item", message: "hell yeah do it", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Neue Aufgabe", message: "Gib einen Namen für diese Aufgabe ein.", preferredStyle: .alert)
         
-        let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
+        let action = UIAlertAction(title: "Sichern", style: .default) { (action) in
             /*what will happen once the user clicks the Add Item button on out UIAlert:*/
             print(textField.text!)
             
@@ -238,8 +239,13 @@ class TodoListViewController: /*SwipeTableViewController*/ UITableViewController
                         }
                     }
                     else {
-                        //Create an alert
-                        print("\n\ncreate an alert \n\n")
+//                        /*Create an alert*/
+//                        /*First, initialize your presented controller*/
+//                        let alert = UIViewController()
+//                        /* Second, initialize a subclass of AlertTransition, such as EasyTransition, configure your controller with it*/
+//                        alert.at.transition = EasyTransition()
+//                        /* Present your controller, Amazing!!*/
+//                        self.present(alert, animated: true, completion: nil)
                     }
                 }
             }
@@ -252,14 +258,14 @@ class TodoListViewController: /*SwipeTableViewController*/ UITableViewController
             self.tableView.reloadData()
         }
         
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
+        let cancelAction = UIAlertAction(title: "Abbrechen", style: .cancel) { (action) in
             /*We just want to cancel so we don't need to write any code*/
         }
         
         /*Creating an alert:*/
         alert.addTextField { (alertTextField) in
             /*placeholder is what's "written" in the textfield before you write something:*/
-            alertTextField.placeholder = "Create new item"
+            alertTextField.placeholder = "Name"
             textField = alertTextField
         }
         
@@ -378,13 +384,13 @@ extension TodoListViewController: SwipeTableViewCellDelegate {
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
         guard orientation == .right else { return nil }
         
-        let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
+        let deleteAction = SwipeAction(style: .destructive, title: "Löschen") { action, indexPath in
             // handle action by updating model with deletion
             self.updateModel(at: indexPath)
         }
         
         // customize the action appearance
-        deleteAction.image = UIImage(named: "delete")
+        deleteAction.image = UIImage(named: "delete-icon")
         
         return [deleteAction]
     }

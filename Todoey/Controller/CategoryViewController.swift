@@ -53,6 +53,8 @@ class CategoryViewController: SwipeTableViewController {
         } else {
             navBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : ContrastColorOf(navBarColour, returnFlat: true)]
         }
+            navBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : ContrastColorOf(navBarColour, returnFlat: true)]
+        
 
     }
     
@@ -62,30 +64,31 @@ class CategoryViewController: SwipeTableViewController {
     
         var textField = UITextField()
         
-        let alert = UIAlertController(title: "Add new todoey category", message: "hell yeah do it", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Neue Kategorie", message: "Gib einen Namen für diese Kategorie ein.", preferredStyle: .alert)
         
-        let action = UIAlertAction(title: "Add Category", style: .default) { (action) in
+        let action = UIAlertAction(title: "Sichern", style: .default) { (action) in
             print(textField.text!)
             
             let newCategory = Category()
             newCategory.name = textField.text!
-//            newCategory.color = UIColor.randomFlat.hexValue()
+            newCategory.color = UIColor.randomFlat.hexValue()
 
             /*Own modification:*/
-            newCategory.color = FlatGray().hexValue()
-                
+//            newCategory.color = FlatGray().hexValue()
+            newCategory.color = RandomFlatColor().hexValue()
+            
             
             /*We dont need to append the "array" anymore because it's auto updating its slef*/
             
             self.save(category: newCategory)
         }
         
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
+        let cancelAction = UIAlertAction(title: "Abbrechen", style: .cancel) { (action) in
             
         }
         
         alert.addTextField { (alertTextField) in
-            alertTextField.placeholder = "Create new category"
+            alertTextField.placeholder = "Namen"
             textField = alertTextField
         }
         
@@ -125,7 +128,7 @@ class CategoryViewController: SwipeTableViewController {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
         /*Also Nil Coalescing Operator:*/
-        cell.textLabel?.text = categoryArray?[indexPath.row].name ?? "No Categories added yet."
+        cell.textLabel?.text = categoryArray?[indexPath.row].name ?? "Noch keine Kategorien vorhanden."
         
         /*If the categoryArray was nil, then we are going to set a default collour for our Cell.*/
         cell.backgroundColor = UIColor(hexString: categoryArray?[indexPath.row].color ?? "1D9BF6")
