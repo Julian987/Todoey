@@ -1,10 +1,13 @@
 import UIKit
 import RealmSwift
 import ChameleonFramework
+import SwipeCellKit
+
 
 /*for comments see TodoListViewController.swift*/
 
-class CategoryViewController: SwipeTableViewController {
+//MARK: - Change
+class CategoryViewController: /*SwipeTableViewController*/ UITableViewController {
 
     /*Why not usig try catch ? see 263 bookmark.Short: we don't have to in this case tha's enough.*/
     let realm = try! Realm()
@@ -22,11 +25,15 @@ class CategoryViewController: SwipeTableViewController {
         
         tableView.rowHeight = 80
         
-        tableView.separatorStyle = .singleLineEtched
-        
+        tableView.separatorStyle = .none 
         guard let navBar = navigationController?.navigationBar else {fatalError("Navigation controller does not exist.")}
         
         navBar.barTintColor = UIColor(hexString: "FFED74")
+        
+        tableView.register(UINib(nibName: "CustomCategoryCell", bundle : nil), forCellReuseIdentifier: "CategoryCell")
+        
+        //MARK: - Change
+        self.configureTableView()
         
 //        updateNavBar(wirhHexCode: "FFED74")
     }
@@ -80,6 +87,8 @@ class CategoryViewController: SwipeTableViewController {
             
             /*We dont need to append the "array" anymore because it's auto updating its slef*/
             
+            self.configureTableView()
+            
             self.save(category: newCategory)
         }
         
@@ -101,6 +110,16 @@ class CategoryViewController: SwipeTableViewController {
         present(alert, animated: true, completion: nil)
     }
     
+    
+    
+    //MARK: - Change:
+    
+    func configureTableView() {
+
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 80.0
+        
+    }
     
     
     
@@ -125,19 +144,35 @@ class CategoryViewController: SwipeTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         /*All we do right now is creating the cell we use for our Table View in our Superclass SwipeTableViewController.*/
-        let cell = super.tableView(tableView, cellForRowAt: indexPath)
+        
+        //MARK: - Change
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath) as! CustomCategoryCell
+        
+        cell.delegate = self
+        
+        
+        
         
         /*Also Nil Coalescing Operator:*/
-        cell.textLabel?.text = categoryArray?[indexPath.row].name ?? "Noch keine Kategorien vorhanden."
+//        cell.textLabel?.text = categoryArray?[indexPath.row].name ?? "Noch keine Kategorien vorhanden."
+        
+        //MARK: - Change
+        cell.cellTextLabel.text = categoryArray?[indexPath.row].name ?? "Noch keine Kategorien vorhanden."
         
         /*If the categoryArray was nil, then we are going to set a default collour for our Cell.*/
-        cell.backgroundColor = UIColor(hexString: categoryArray?[indexPath.row].color ?? "1D9BF6")
+//        cell.backgroundColor = UIColor(hexString: categoryArray?[indexPath.row].color ?? "1D9BF6")
+        
+        //MARK: - Change
+        cell.cellBackround.backgroundColor = UIColor(hexString: categoryArray?[indexPath.row].color ?? "1D9BF6")
         
         if let category = categoryArray?[indexPath.row]{
             
             guard let categoryColour = UIColor(hexString: category.color) else {fatalError()}
             
-            cell.textLabel?.textColor = ContrastColorOf(categoryColour, returnFlat: true)
+//            cell.textLabel?.textColor = ContrastColorOf(categoryColour, returnFlat: true)
+            
+            //MARK: - Change
+            cell.cellTextLabel.textColor = ContrastColorOf(categoryColour, returnFlat: true)
         }
         return cell
     }
@@ -178,7 +213,7 @@ class CategoryViewController: SwipeTableViewController {
     
     //MARK: - Delete Data From Swipe
     
-    override func updateModel(at indexPath: IndexPath) {
+    func updateModel(at indexPath: IndexPath) {
         if let categoryForDeletion = self.categoryArray?[indexPath.row]{
         
             do {
@@ -225,3 +260,25 @@ class CategoryViewController: SwipeTableViewController {
     }
 }
 
+
+
+
+
+
+//MARK:- Change
+extension CategoryViewController: SwipeTableViewCellDelegate {
+    
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
+        guard orientation == .right else { return nil }
+        
+        let deleteAction = SwipeAction(style: .destructive, title: "Löschen") { action, indexPath in
+            // handle action by updating model with deletion
+            self.updateModel(at: indexPath)
+        }
+        
+        // customize the action appearance
+        deleteAction.image = UIImage(named: "delete-icon")
+        
+        return [deleteAction]
+    }
+}

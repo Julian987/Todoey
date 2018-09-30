@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6F19CEB5215FE4920031F788 /* CustomCategoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F19CEB3215FE4920031F788 /* CustomCategoryCell.swift */; };
+		6F19CEB6215FE4920031F788 /* CustomCategoryCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F19CEB4215FE4920031F788 /* CustomCategoryCell.xib */; };
 		6F3F932221552E4D00355DD8 /* CategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3F932121552E4D00355DD8 /* CategoryViewController.swift */; };
 		6F6E7E63215CED0B00FD72E8 /* CustomTodoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6E7E61215CED0B00FD72E8 /* CustomTodoCell.swift */; };
 		6F6E7E64215CED0B00FD72E8 /* CustomTodoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F6E7E62215CED0B00FD72E8 /* CustomTodoCell.xib */; };
@@ -22,6 +24,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6F19CEB3215FE4920031F788 /* CustomCategoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCategoryCell.swift; sourceTree = "<group>"; };
+		6F19CEB4215FE4920031F788 /* CustomCategoryCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomCategoryCell.xib; sourceTree = "<group>"; };
 		6F3F932121552E4D00355DD8 /* CategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryViewController.swift; sourceTree = "<group>"; };
 		6F6E7E61215CED0B00FD72E8 /* CustomTodoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTodoCell.swift; sourceTree = "<group>"; };
 		6F6E7E62215CED0B00FD72E8 /* CustomTodoCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomTodoCell.xib; sourceTree = "<group>"; };
@@ -92,18 +96,20 @@
 			isa = PBXGroup;
 			children = (
 				6FC1FABF21516CBA00B18994 /* Main.storyboard */,
-				6F6E7E60215CEBAA00FD72E8 /* Custom Cell */,
+				6F6E7E60215CEBAA00FD72E8 /* Custom Cells */,
 			);
 			path = View;
 			sourceTree = "<group>";
 		};
-		6F6E7E60215CEBAA00FD72E8 /* Custom Cell */ = {
+		6F6E7E60215CEBAA00FD72E8 /* Custom Cells */ = {
 			isa = PBXGroup;
 			children = (
 				6F6E7E61215CED0B00FD72E8 /* CustomTodoCell.swift */,
 				6F6E7E62215CED0B00FD72E8 /* CustomTodoCell.xib */,
+				6F19CEB3215FE4920031F788 /* CustomCategoryCell.swift */,
+				6F19CEB4215FE4920031F788 /* CustomCategoryCell.xib */,
 			);
-			path = "Custom Cell";
+			path = "Custom Cells";
 			sourceTree = "<group>";
 		};
 		6FC1FAAF21516CBA00B18994 = {
@@ -207,6 +213,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6F6E7E64215CED0B00FD72E8 /* CustomTodoCell.xib in Resources */,
+				6F19CEB6215FE4920031F788 /* CustomCategoryCell.xib in Resources */,
 				6FC1FAC621516CBB00B18994 /* LaunchScreen.storyboard in Resources */,
 				6FC1FAC321516CBB00B18994 /* Assets.xcassets in Resources */,
 				6FC1FAC121516CBA00B18994 /* Main.storyboard in Resources */,
@@ -281,6 +288,7 @@
 				6F6E7E63215CED0B00FD72E8 /* CustomTodoCell.swift in Sources */,
 				6F3F932221552E4D00355DD8 /* CategoryViewController.swift in Sources */,
 				6FC1FABE21516CBA00B18994 /* TodoListViewController.swift in Sources */,
+				6F19CEB5215FE4920031F788 /* CustomCategoryCell.swift in Sources */,
 				6FC1FABC21516CBA00B18994 /* AppDelegate.swift in Sources */,
 				6FA1DCC9215A6E8000515084 /* SwipeTableViewController.swift in Sources */,
 				6FDB0E7F21556B7300489FDE /* Category.swift in Sources */,

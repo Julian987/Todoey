@@ -29,16 +29,16 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mwh-NB-4TO" userLabel="End Stripe">
-                                <rect key="frame" x="0.0" y="78" width="320" height="1"/>
+                                <rect key="frame" x="0.0" y="78" width="320" height="2"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="1" id="VTt-S0-vhY"/>
+                                    <constraint firstAttribute="height" constant="2" id="VTt-S0-vhY"/>
                                 </constraints>
                             </view>
                         </subviews>
                         <constraints>
                             <constraint firstItem="EPs-fx-i7J" firstAttribute="top" secondItem="yYy-vu-2Rc" secondAttribute="top" constant="11" id="Kc2-cq-kKI"/>
-                            <constraint firstAttribute="bottom" secondItem="Mwh-NB-4TO" secondAttribute="bottom" constant="0.5" id="Tk7-m1-uBg"/>
+                            <constraint firstAttribute="bottom" secondItem="Mwh-NB-4TO" secondAttribute="bottom" constant="-0.5" id="Tk7-m1-uBg"/>
                             <constraint firstAttribute="bottom" secondItem="EPs-fx-i7J" secondAttribute="bottom" constant="11" id="c4a-s2-Oly"/>
                             <constraint firstAttribute="trailing" secondItem="Mwh-NB-4TO" secondAttribute="trailing" constant="-41" id="kEN-zp-whm"/>
                             <constraint firstItem="Mwh-NB-4TO" firstAttribute="leading" secondItem="yYy-vu-2Rc" secondAttribute="leading" id="m2y-tf-gpb"/>
@@ -91,7 +91,7 @@
                 <outlet property="cellTextLabel" destination="EPs-fx-i7J" id="FeZ-Ci-aNr"/>
                 <outlet property="chekFieldButton" destination="oBG-4Z-neH" id="zFV-Kx-mhl"/>
             </connections>
-            <point key="canvasLocation" x="-24.375" y="-646.25"/>
+            <point key="canvasLocation" x="-92" y="-726"/>
         </tableViewCell>
     </objects>
     <resources>

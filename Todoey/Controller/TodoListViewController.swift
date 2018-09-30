@@ -289,9 +289,7 @@ class TodoListViewController: /*SwipeTableViewController*/ UITableViewController
             }
         }
         tableView.rowHeight = UITableView.automaticDimension
-        print("automatic dimension : \(UITableView.automaticDimension)")
         tableView.estimatedRowHeight = 80.0
-        print("utomatic dimension after estimatedRowheight \(UITableView.automaticDimension)")
 
     }
     
