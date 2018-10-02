@@ -3,6 +3,7 @@ import RealmSwift
 import ChameleonFramework
 import SwipeCellKit
 import AlertTransition
+import LXStatusAlert
 
 //MARK: - Change
 class TodoListViewController: /*SwipeTableViewController*/ UITableViewController {
@@ -177,6 +178,7 @@ class TodoListViewController: /*SwipeTableViewController*/ UITableViewController
                     }
                 }
             }
+            
         
             
             
@@ -212,6 +214,16 @@ class TodoListViewController: /*SwipeTableViewController*/ UITableViewController
             catch{
                 print("Error saving done status \(error)")
             }
+            
+            if item.done {
+                let image = UIImage(named: "Test")
+                
+                let statusAlert = LXStatusAlert(image: image!, title: "", duration: 0.2)
+                
+                statusAlert.show()
+            }
+            
+            
         }
         
         
@@ -258,7 +270,7 @@ class TodoListViewController: /*SwipeTableViewController*/ UITableViewController
                     else {
 //                        /*Create an alert*/
 //                        /*First, initialize your presented controller*/
-//                        let alert = UIViewController()
+//                        let alert = PopUpViewController()
 //                        /* Second, initialize a subclass of AlertTransition, such as EasyTransition, configure your controller with it*/
 //                        alert.at.transition = EasyTransition()
 //                        /* Present your controller, Amazing!!*/
@@ -410,4 +422,5 @@ extension TodoListViewController: SwipeTableViewCellDelegate {
         return [deleteAction]
     }
 }
+
 
