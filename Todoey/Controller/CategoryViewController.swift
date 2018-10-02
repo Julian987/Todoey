@@ -17,6 +17,12 @@ class CategoryViewController: /*SwipeTableViewController*/ UITableViewController
      Result is an auto updating container (container = for ex an array)*/
     var categoryArray : Results<Category>?
     
+//    var colourArray = ["#E84D3C" , "#FFCC02" , "#EFDDB3" , "#33495E" , "#2B2B2B" , "#3A7082" , "#1ABC9C" , "#EDF1F2" , "#335E40" , "#5E4433" , "#5E335E" , "#EF7079" , "#F47CC4" , "#B8C9F2" , "#5065A0"]
+    
+    var colourArray = [String]()
+    
+    let defaults = UserDefaults.standard
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -32,8 +38,39 @@ class CategoryViewController: /*SwipeTableViewController*/ UITableViewController
         
         tableView.register(UINib(nibName: "CustomCategoryCell", bundle : nil), forCellReuseIdentifier: "CategoryCell")
         
+        //If we didn't store something under the key colourArray then do nothing, but if we did then colour array should be that:
+        if let colourArray1 = defaults.array(forKey: "colourArray") as! [String]? {
+            colourArray = colourArray1
+        }
+        
         //MARK: - Change
         self.configureTableView()
+        
+        print("flatred: \(UIColor.flatRed.hexValue())")
+        print("flatorange: \(UIColor.flatOrange.hexValue())")
+        print("flatyellow: \(UIColor.flatYellow.hexValue())")
+        print("flatsand: \(UIColor.flatSand.hexValue())")
+        print("flatnavi blue: \(UIColor.flatNavyBlue.hexValue())")
+        print("flatblack: \(UIColor.flatBlack.hexValue())")
+        print("flatmagenta: \(UIColor.flatMagenta.hexValue())")
+        print("flatteal: \(UIColor.flatTeal.hexValue())")
+        print("flatsky blue: \(UIColor.flatSkyBlue.hexValue())")
+        print("flatgreen: \(UIColor.flatGreen.hexValue())")
+        print("flatmint: \(UIColor.flatMint.hexValue())")
+        print("flatwhite: \(UIColor.flatWhite.hexValue())")
+        print("flatgray: \(UIColor.flatGray.hexValue())")
+        print("flatforest green: \(UIColor.flatForestGreen.hexValue())")
+        print("flatpurple: \(UIColor.flatPurple.hexValue())")
+        print("flatbrown: \(UIColor.flatBrown.hexValue())")
+        print("flatplum: \(UIColor.flatPlum.hexValue())")
+        print("flatwatermelon: \(UIColor.flatWatermelon.hexValue())")
+        print("flatlime: \(UIColor.flatLime.hexValue())")
+        print("flatpink: \(UIColor.flatPink.hexValue())")
+        print("flatmaroon: \(UIColor.flatMaroon.hexValue())")
+        print("flatcoffee: \(UIColor.flatCoffee.hexValue())")
+        print("flatpowder blue: \(UIColor.flatPowderBlue.hexValue())")
+        print("flatblue: \(UIColor.flatBlue.hexValue())")
+
         
 //        updateNavBar(wirhHexCode: "FFED74")
     }
@@ -76,20 +113,55 @@ class CategoryViewController: /*SwipeTableViewController*/ UITableViewController
         let action = UIAlertAction(title: "Sichern", style: .default) { (action) in
             print(textField.text!)
             
-            let newCategory = Category()
-            newCategory.name = textField.text!
-            newCategory.color = UIColor.randomFlat.hexValue()
-
-            /*Own modification:*/
-//            newCategory.color = FlatGray().hexValue()
-            newCategory.color = RandomFlatColor().hexValue()
-            
-            
+            if let textInTextField = textField.text {
+                
+                if textInTextField != "" {
+                    let newCategory = Category()
+                    newCategory.name = textField.text!
+                    newCategory.dateCreated = Date()
+                    
+                    /*Own modification:*/
+                    //            newCategory.color = FlatGray().hexValue()
+                    
+                    print("colourArray.count : \(self.colourArray.count)")
+                    
+                    if self.colourArray.count >= 1{
+                        let randomInt = Int.random(in: 0 ... self.colourArray.count - 1)
+                        newCategory.color = UIColor(hexString: self.colourArray[randomInt])!.hexValue()
+                        self.colourArray.remove(at: randomInt)
+                        self.defaults.set(self.colourArray, forKey: "colourArray")
+                    }
+                        
+                    else {
+                        
+                        self.colourArray = ["#E84D3C" , "#FFCC02" , "#EFDDB3" , "#33495E" , "#2B2B2B" , "#3A7082" , "#EDF1F2" , "#335E40" , "#5E4433" , "#5E335E" , "#EF7079" , "#F47CC4" , "#B8C9F2" , "#5065A0"]
+                        let randomInt = Int.random(in: 0 ... self.colourArray.count - 1)
+                        newCategory.color = UIColor(hexString: self.colourArray[randomInt])!.hexValue()
+                        self.colourArray.remove(at: randomInt)
+                        self.defaults.set(self.colourArray, forKey: "colourArray")
+                    }
+                    
+                    
+                    
+//                    while (newCategory.color == "#E57D22") || (newCategory.color == "#9A58B5") || (newCategory.color == "#3498DB") || (newCategory.color == "#2ECC70") || (newCategory.color == "#95A4A5") || (newCategory.color == "#745EC4") || (newCategory.color == "#A6C63B") || (newCategory.color == "#773029") || (newCategory.color == "#A38570"){
+//
+//                        print("in while")
+//
+//                        newCategory.color = RandomFlatColorWithShade(.light).hexValue()
+//
+//
+//                    }
+                    self.configureTableView()
+                    
+                    self.save(category: newCategory)
+                    
+                }
+                
+            }
+ 
             /*We dont need to append the "array" anymore because it's auto updating its slef*/
             
-            self.configureTableView()
-            
-            self.save(category: newCategory)
+
         }
         
         let cancelAction = UIAlertAction(title: "Abbrechen", style: .cancel) { (action) in
@@ -204,6 +276,8 @@ class CategoryViewController: /*SwipeTableViewController*/ UITableViewController
     
         /*Pull out all of the object in our Realm, that are Categories:*/
         categoryArray = realm.objects(Category.self)
+        
+        categoryArray = categoryArray?.sorted(byKeyPath: "dateCreated", ascending: true)
         
         tableView.reloadData()
     

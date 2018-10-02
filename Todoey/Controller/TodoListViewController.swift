@@ -132,8 +132,25 @@ class TodoListViewController: /*SwipeTableViewController*/ UITableViewController
             
             cell.cellTextLabel.text = item.title
             
+            
             /*CGFloat is short for CoreGraohicsFloat:*/
-            if let colour = UIColor(hexString: selectedCategory!.color)?.darken(byPercentage: (  CGFloat(indexPath.row) / CGFloat(todoItems!.count) )  ){
+            
+            
+            //MARK: - Change
+            //if let colour1 = UIColor(hexString: selectedCategory!.color)?.darken(byPercentage: (  CGFloat(indexPath.row) / CGFloat(todoItems!.count) )  ){ War der orginal code. und dann einfach die coulour varibale raushauen.
+            
+            if let colour1 = UIColor(hexString: selectedCategory!.color){
+                
+                var colour = UIColor()
+                
+                if (colour1.hexValue() == "#E84D3C") || (colour1.hexValue() == "#FFCC02") || (colour1.hexValue() == "#EFDDB3") || (colour1.hexValue() == "#EDF1F2") || (colour1.hexValue() == "#EF7079") || (colour1.hexValue() == "#F47CC4") || (colour1.hexValue() == "#B8C9F2"){
+                    
+                    colour = colour1.darken(byPercentage: (  CGFloat(indexPath.row) / CGFloat(todoItems!.count) )  )!
+                
+                }
+                else {
+                    colour = colour1.lighten(byPercentage: (  CGFloat(indexPath.row) / CGFloat(todoItems!.count) )  )!
+                }
 
                 //MARK: - Change:
                 /*cell.backgroundColor = colour

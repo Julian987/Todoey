@@ -5,6 +5,7 @@ import RealmSwift
 class Category: Object {
     @objc dynamic var name : String = ""
     @objc dynamic var color : String = ""
+    @objc dynamic var dateCreated: Date?
     /*Each Category object has an array of pointers to item objects. That's for creating the Relationship between Item
       and Category:*/
     let items = List<Item>()
