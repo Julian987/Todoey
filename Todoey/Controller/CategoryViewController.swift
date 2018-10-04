@@ -222,6 +222,12 @@ class CategoryViewController: /*SwipeTableViewController*/ UITableViewController
         
         cell.delegate = self
         
+        let view = UIView()
+        view.backgroundColor = UIColor(hexString: "FFED74")
+        cell.selectedBackgroundView = view
+        
+
+        
         
         
         
@@ -297,6 +303,15 @@ class CategoryViewController: /*SwipeTableViewController*/ UITableViewController
                     
                     print("endIndex is: \(endIndex)")
                     
+                    if endIndex != 0 {
+                        for index in 1...endIndex {
+                            self.realm.delete(categoryForDeletion.items[endIndex - index])
+                            print("endIndex is: \(categoryForDeletion.items.endIndex)")
+                        }
+                    }
+                    
+                    
+                    
                 self.realm.delete(categoryForDeletion)
                 }
             }
@@ -319,18 +334,25 @@ class CategoryViewController: /*SwipeTableViewController*/ UITableViewController
        
         //MARK: - Change:
         
-        tableView.deselectRow(at: indexPath, animated: false)
+        tableView.deselectRow(at: indexPath, animated: true)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let destinationVC = segue.destination as! TodoListViewController
         
-        if let indexPath = tableView.indexPathForSelectedRow {
-            /*ToDoListViewController has a property called selectedCategory. It's of type Category?. And if the property is not
-              nill the function loadItems() gets called. After that the items within that Category get load up in the
-              TableViewController.*/
-            destinationVC.selectedCategory = categoryArray?[indexPath.row]
+        
+        if segue.identifier == "goToItems" {
+           
+            let destinationVC = segue.destination as! TodoListViewController
+            
+            if let indexPath = tableView.indexPathForSelectedRow {
+                /*ToDoListViewController has a property called selectedCategory. It's of type Category?. And if the property is not
+                 nill the function loadItems() gets called. After that the items within that Category get load up in the
+                 TableViewController.*/
+                destinationVC.selectedCategory = categoryArray?[indexPath.row]
+            }
+            
         }
+
     }
 }
 

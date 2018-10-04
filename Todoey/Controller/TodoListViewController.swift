@@ -11,11 +11,15 @@ class TodoListViewController: /*SwipeTableViewController*/ UITableViewController
     /*the only reason we didn't use an array of string is, we need to Store 2 pices of data.
       the title of the thing we wanna do AND if its checked or not.*/
     var todoItems : Results<Item>?
+    var OgTodoItemsForSearching : Results<Item>?
     let realm = try! Realm()
+    let defaults = UserDefaults.standard
+    var spackomodus : Bool? = nil
+    var pictureArray = ["1" , "2" , "3" , "4" , "5" , "6" , "7" , "8" , "9" , "10" , "11" , "12"]
+    var pictureTextArray = ["DONE" , "Not bad" , "Das ging schnell" , "Na endlich" , "NICE" , "Viel zu viel zu tun" , "YES" , "FINALLY" , "Erst mal n Caffe" , "Always busy" , "Jetzt ne Runde fernsehen" , "High five"]
     
     
     @IBOutlet weak var searchBar: UISearchBar!
-    
     
     var selectedCategory : Category? {
         /*If the property selectedCategory is set, then call loadItems:*/
@@ -42,6 +46,10 @@ class TodoListViewController: /*SwipeTableViewController*/ UITableViewController
         
         //MARK: - Change:
         tableView.register(UINib(nibName: "CustomTodoCell", bundle : nil), forCellReuseIdentifier: "TodoItemCell")
+        
+        
+        //After View loaded up we know that spackomodus has a value
+        spackomodus = defaults.bool(forKey: "SpackoModus")
         
         
         //MARK: - Change:
@@ -93,6 +101,7 @@ class TodoListViewController: /*SwipeTableViewController*/ UITableViewController
         } else {
             navBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : ContrastColorOf(navBarColour, returnFlat: true)]
         }
+        navBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : ContrastColorOf(navBarColour, returnFlat: true)]
         
         searchBar.barTintColor = navBarColour
     }
@@ -216,11 +225,47 @@ class TodoListViewController: /*SwipeTableViewController*/ UITableViewController
             }
             
             if item.done {
-                let image = UIImage(named: "Test")
                 
-                let statusAlert = LXStatusAlert(image: image!, title: "", duration: 0.2)
+                if spackomodus! {
+                    
+                    
+                    if pictureArray.count >= 1 {
+                        let randomInt = Int.random(in: 0 ... self.pictureArray.count - 1)
+                        
+                        let image = UIImage(named: pictureArray[randomInt])
+                        
+                        let statusAlert = LXStatusAlert(image: image!, title: pictureTextArray[randomInt], duration: 0.2)
+                        
+                        pictureArray.remove(at: randomInt)
+                        
+                        pictureTextArray.remove(at: randomInt)
+                        
+                        statusAlert.show()
+                    }
+                    
+                    else{
+                        pictureArray = ["1" , "2" , "3" , "4" , "5" , "6" , "7" , "8" , "9" , "10" , "11" , "12"]
+                        
+                        pictureTextArray = ["DONE" , "Not bad" , "Das ging schnell" , "Na endlich" , "NICE" , "Viel zu viel zu tun" , "YES" , "FINALLY" , "Erst mal n Caffe" , "Always busy" , "Jetzt ne Runde fernsehen" , "High five"]
+                        
+                        let randomInt = Int.random(in: 0 ... self.pictureArray.count - 1)
+                        
+                        let image = UIImage(named: pictureArray[randomInt])
+                        
+                        let statusAlert = LXStatusAlert(image: image!, title: pictureTextArray[randomInt], duration: 0.2)
+                        
+                        pictureArray.remove(at: randomInt)
+                        
+                        pictureTextArray.remove(at: randomInt)
+                        
+                        statusAlert.show()
+                        
+                        
+                    }
+                    
+                }
                 
-                statusAlert.show()
+
             }
             
             
@@ -372,9 +417,23 @@ extension TodoListViewController: UISearchBarDelegate {
      gets triggered. Then this function surches in your DATAMODEL so our List of Items. And the it displays the new Data in the Cells
      of our TableView. It doesen't search for the content in your Cells that you display on screen it searches in the DATABASE:*/
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        print("search Button clicked")
-        todoItems = todoItems?.filter("title CONTAINS [cd] %@", searchBar.text!).sorted(byKeyPath: "dateCreated", ascending: true)
-        tableView.reloadData()
+        
+        if let searchBarText = searchBar.text {
+            
+            if searchBarText != ""{
+                print("search Button clicked")
+                todoItems = todoItems?.filter("title CONTAINS [cd] %@", searchBar.text!).sorted(byKeyPath: "dateCreated", ascending: true)
+                //        makeKeyboardDissapear()
+                tableView.reloadData()
+            }
+            
+            else {
+                makeKeyboardDissapear()
+            }
+        }
+        
+        
+        
     }
 
    
@@ -396,6 +455,20 @@ extension TodoListViewController: UISearchBarDelegate {
                 searchBar.resignFirstResponder()
             }
 
+        }
+        
+//        else {
+//            //MARK: - Search test
+//            todoItems = todoItems?.filter("title CONTAINS [cd] %@", searchBar.text!).sorted(byKeyPath: "dateCreated", ascending: true)
+//            tableView.reloadData()
+//        }
+    }
+    
+    
+    @objc func makeKeyboardDissapear(){
+        DispatchQueue.main.async{
+            /*Makes keyboard and the curser in the searchbar dissapear: see also 258 bookmark*/
+            self.searchBar.resignFirstResponder()
         }
     }
 

@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -100,13 +101,24 @@
                             <outlet property="delegate" destination="9DB-jw-Mc9" id="cjc-DK-drj"/>
                         </connections>
                     </tableView>
+                    <toolbarItems/>
                     <navigationItem key="navigationItem" title="To do" id="OME-Jm-3nY">
+                        <barButtonItem key="leftBarButtonItem" title="Item" image="settings-icon-1" id="TCu-eQ-C7z" userLabel="Settings">
+                            <inset key="imageInsets" minX="-1" minY="2" maxX="0.0" maxY="0.0"/>
+                            <inset key="largeContentSizeImageInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="1"/>
+                            <connections>
+                                <segue destination="NWR-ls-HFf" kind="popoverPresentation" popoverAnchorBarButtonItem="TCu-eQ-C7z" id="82G-Uu-r8D">
+                                    <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                                </segue>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="XuN-uZ-phv">
                             <connections>
                                 <action selector="addButtonPressed:" destination="9DB-jw-Mc9" id="8mH-U9-gt8"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <segue destination="T3w-pQ-sxc" kind="show" identifier="goToItems" id="TqY-Uo-KCa"/>
                     </connections>
@@ -115,5 +127,85 @@
             </objects>
             <point key="canvasLocation" x="-322.5" y="-118.75"/>
         </scene>
+        <!--Settings View Controller-->
+        <scene sceneID="Ldu-zc-4qN">
+            <objects>
+                <viewController id="NWR-ls-HFf" customClass="SettingsViewController" customModule="Todoey" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="1r5-IR-UoQ">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Einstellungen" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="72v-sV-RsA">
+                                <rect key="frame" x="16" y="41" width="288" height="72"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="72" id="UgL-C5-1UQ"/>
+                                    <constraint firstAttribute="width" constant="288" id="emd-F3-roK"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Arial-BoldMT" family="Arial" pointSize="30"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BrR-d3-M5d">
+                                <rect key="frame" x="83" y="499" width="154" height="41"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="154" id="MyF-Il-SAb"/>
+                                    <constraint firstAttribute="height" constant="41" id="dHS-Ge-s28"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Arial-BoldMT" family="Arial" pointSize="21"/>
+                                <state key="normal" title="fertig">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="fertigButtonPressed:" destination="NWR-ls-HFf" eventType="touchUpInside" id="qUh-vr-8mp"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Unnötige Kommentare" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PME-8U-8z8">
+                                <rect key="frame" x="16" y="273" width="215" height="22.5"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="22.5" id="4J8-vk-p3G"/>
+                                    <constraint firstAttribute="width" constant="215" id="yYN-yO-lJ2"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Arial-BoldMT" family="Arial" pointSize="20"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uhr-gS-643" userLabel="Spacko Switch">
+                                <rect key="frame" x="257" y="268.5" width="49" height="31"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="31" id="JZX-Jf-qz6"/>
+                                    <constraint firstAttribute="width" constant="47" id="eJf-bU-84S"/>
+                                </constraints>
+                                <color key="onTintColor" red="0.25819171120000001" green="1" blue="0.4107907354" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <connections>
+                                    <action selector="spackoSwitchOn:" destination="NWR-ls-HFf" eventType="valueChanged" id="Q9r-ic-w7L"/>
+                                </connections>
+                            </switch>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="0.92941176469999998" blue="0.4549019608" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="PME-8U-8z8" firstAttribute="centerY" secondItem="1r5-IR-UoQ" secondAttribute="centerY" id="3vE-g9-WSO"/>
+                            <constraint firstItem="BjW-RL-BQr" firstAttribute="bottom" secondItem="BrR-d3-M5d" secondAttribute="bottom" constant="28" id="3yO-kj-9uc"/>
+                            <constraint firstItem="72v-sV-RsA" firstAttribute="top" secondItem="BjW-RL-BQr" secondAttribute="top" constant="21" id="9xN-Kp-yXS"/>
+                            <constraint firstItem="72v-sV-RsA" firstAttribute="centerX" secondItem="1r5-IR-UoQ" secondAttribute="centerX" id="SEK-wH-Ieb"/>
+                            <constraint firstItem="uhr-gS-643" firstAttribute="centerY" secondItem="1r5-IR-UoQ" secondAttribute="centerY" id="Trc-Xn-AcP"/>
+                            <constraint firstItem="BjW-RL-BQr" firstAttribute="trailing" secondItem="uhr-gS-643" secondAttribute="trailing" constant="16" id="ZtY-va-5d7"/>
+                            <constraint firstItem="BrR-d3-M5d" firstAttribute="centerX" secondItem="1r5-IR-UoQ" secondAttribute="centerX" id="iBX-iv-B7D"/>
+                            <constraint firstItem="PME-8U-8z8" firstAttribute="leading" secondItem="BjW-RL-BQr" secondAttribute="leading" constant="16" id="nFn-Ew-P5f"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="BjW-RL-BQr"/>
+                    </view>
+                    <connections>
+                        <outlet property="fertigButton" destination="BrR-d3-M5d" id="Cbb-jP-IUP"/>
+                        <outlet property="spackoSwitch" destination="uhr-gS-643" id="fTQ-qK-mOk"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="yCW-AT-99l" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-324.375" y="725.70422535211264"/>
+        </scene>
     </scenes>
+    <resources>
+        <image name="settings-icon-1" width="25" height="25"/>
+    </resources>
 </document>
